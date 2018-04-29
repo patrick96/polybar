@@ -90,7 +90,7 @@ namespace modules {
     bool m_strip_wsnumbers{false};
     bool m_fuzzy_match{false};
 
-    unique_ptr<i3_util::connection_t> m_ipc;
+    unique_ptr<i3ipc::connection> m_ipc;
   };
 }
 

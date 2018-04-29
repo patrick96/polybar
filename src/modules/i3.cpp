@@ -115,15 +115,14 @@ namespace modules {
 
   bool i3_module::update() {
     m_workspaces.clear();
-    i3_util::connection_t ipc;
 
     try {
-      vector<shared_ptr<i3_util::workspace_t>> workspaces;
+      vector<shared_ptr<i3ipc::workspace_t>> workspaces;
 
       if (m_pinworkspaces) {
-        workspaces = i3_util::workspaces(ipc, m_bar.monitor->name);
+        workspaces = i3_util::workspaces(*m_ipc, m_bar.monitor->name);
       } else {
-        workspaces = i3_util::workspaces(ipc);
+        workspaces = i3_util::workspaces(*m_ipc);
       }
 
       if (m_indexsort) {
@@ -219,13 +218,11 @@ namespace modules {
     }
 
     try {
-      const i3_util::connection_t conn{};
-
       if (cmd.compare(0, strlen(EVENT_CLICK), EVENT_CLICK) == 0) {
         cmd.erase(0, strlen(EVENT_CLICK));
-        if (i3_util::focused_workspace(conn)->name != cmd) {
+        if (i3_util::focused_workspace(*m_ipc)->name != cmd) {
           m_log.info("%s: Sending workspace focus command to ipc handler", name());
-          conn.send_command("workspace " + cmd);
+          m_ipc->send_command("workspace " + cmd);
         }
         return true;
       }
@@ -240,7 +237,7 @@ namespace modules {
         return false;
       }
 
-      auto workspaces = i3_util::workspaces(conn, m_bar.monitor->name);
+      auto workspaces = i3_util::workspaces(*m_ipc, m_bar.monitor->name);
       auto current_ws = find_if(workspaces.begin(), workspaces.end(),
                                 [](auto ws) { return ws->visible; });
 
@@ -252,17 +249,17 @@ namespace modules {
       if (scrolldir == "next" && (m_wrap || next(current_ws) != workspaces.end())) {
         if (!(*current_ws)->focused) {
           m_log.info("%s: Sending workspace focus command to ipc handler", name());
-          conn.send_command("workspace " + (*current_ws)->name);
+          m_ipc->send_command("workspace " + (*current_ws)->name);
         }
         m_log.info("%s: Sending workspace next_on_output command to ipc handler", name());
-        conn.send_command("workspace next_on_output");
+        m_ipc->send_command("workspace next_on_output");
       } else if (scrolldir == "prev" && (m_wrap || current_ws != workspaces.begin())) {
         if (!(*current_ws)->focused) {
           m_log.info("%s: Sending workspace focus command to ipc handler", name());
-          conn.send_command("workspace " + (*current_ws)->name);
+          m_ipc->send_command("workspace " + (*current_ws)->name);
         }
         m_log.info("%s: Sending workspace prev_on_output command to ipc handler", name());
-        conn.send_command("workspace prev_on_output");
+        m_ipc->send_command("workspace prev_on_output");
       }
 
     } catch (const exception& err) {
