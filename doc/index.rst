@@ -9,8 +9,11 @@ Polybar Documentation
 Welcome to the official polybar documentation.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
+
+   configuration
+   modules/index
 
 .. toctree::
    :maxdepth: 1

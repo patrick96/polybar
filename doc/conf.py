@@ -17,6 +17,7 @@ import datetime
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+from sphinx.locale import _
 
 # -- Project information -----------------------------------------------------
 
@@ -90,14 +91,14 @@ pygments_style = None
 #
 if on_rtd:
   html_theme = 'sphinx_rtd_theme'
+  # Options are theme specific
+  html_theme_options = {
+    'collapse_navigation': False, # Collapse navigation (False makes it tree-like)
+  }
 else:
   html_theme = 'alabaster'
+  html_theme_options = {}
 
-# Theme options are theme-specific and customize the look and feel of a theme
-# further.  For a list of options available for each theme, see the
-# documentation.
-#
-# html_theme_options = {}
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -186,3 +187,29 @@ epub_title = project
 
 # A list of files that should not be packed into the epub file.
 epub_exclude_files = ['search.html']
+
+def setup(app):
+    from sphinx.domains.python import PyField
+    from sphinx.util.docfields import Field
+
+    app.add_object_type(
+        'confval',
+        'confval',
+        objname='configuration value',
+        indextemplate='pair: %s; configuration value',
+        doc_field_types=[
+            PyField(
+                'type',
+                label=_('Type'),
+                has_arg=False,
+                names=('type',),
+                bodyrolename='class'
+            ),
+            Field(
+                'default',
+                label=_('Default'),
+                has_arg=False,
+                names=('default',),
+            ),
+        ]
+)
