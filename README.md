@@ -1,23 +1,3 @@
-<p align="center">
-	<img src="banner.png" alt="Polybar">
-</p>
-
-<p align="center">
-A fast and easy-to-use tool for creating status bars.
-</p>
-
-<p align="center">
-<a href="https://github.com/jaagr/polybar/releases"><img src="https://img.shields.io/github/release/jaagr/polybar.svg"></a>
-<a href="https://travis-ci.org/jaagr/polybar"><img src="https://travis-ci.org/jaagr/polybar.svg?branch=master"></a>
-<a href="https://polybar.readthedocs.io"><img src="https://readthedocs.org/projects/polybar/badge/?version=latest"></a>
-<a href="https://codecov.io/gh/jaagr/polybar/branch/master"><img src="https://codecov.io/gh/jaagr/polybar/branch/master/graph/badge.svg"></a>
-<a href="https://github.com/jaagr/polybar/blob/master/LICENSE"><img src="https://img.shields.io/github/license/jaagr/polybar.svg"></a>
-</p>
-
-**Polybar** aims to help users build beautiful and highly customizable status bars
-for their desktop environment, without the need of having a black belt in shell scripting.
-Here are a few screenshots showing you what it can look like:
-
 [![sample screenshot](http://i.imgur.com/xvlw9iHt.png)](http://i.imgur.com/xvlw9iH.png)
 [![sample screenshot](http://i.imgur.com/cYQOuRrt.png)](http://i.imgur.com/cYQOuRr.png)
 [![sample screenshot](http://i.imgur.com/A6spiZZt.png)](http://i.imgur.com/A6spiZZ.png)
@@ -197,7 +177,3 @@ Want to get in touch?
 
 
 ### [All Contributors](https://github.com/jaagr/polybar/graphs/contributors)
-
-## License
-
-Polybar is licensed under the MIT license. [See LICENSE for more information](https://github.com/jaagr/polybar/blob/master/LICENSE).
