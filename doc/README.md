@@ -20,3 +20,6 @@ Once configured, all of the documentation can be generated with `make doc` or us
 only generate the html documentation or the man pages respectively.
 
 The HTML documentation is in `doc/html/index.html` in your build directory and the man pages are in `doc/man`.
+
+The sphinx theme used for the HTML documentation can be changed with the `SPHINX_THEME` environment variable. It
+defaults to `alabaster` but can be set to `sphinx_rtd_theme` if you want to preview how the documentation looks on rtd.

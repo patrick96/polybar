@@ -96,7 +96,7 @@ pygments_style = None
 if on_rtd:
   html_theme = 'sphinx_rtd_theme'
 else:
-  html_theme = 'alabaster'
+  html_theme = os.environ.get('SPHINX_THEME', 'alabaster')
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
