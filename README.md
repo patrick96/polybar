@@ -38,8 +38,7 @@ Make sure you include steps on how to reproduce it.
 * [Introduction](#introduction)
 * [Getting Help](#getting-help)
 * [Getting started](#getting-started)
-  * [Dependencies](#dependencies)
-  * [Building from source](#building-from-source)
+  * [Installation](#installation)
   * [Configuration](#configuration)
   * [Running](#running)
 * [Community](#community)
@@ -77,14 +76,20 @@ Some of the services included so far:
 
 If you find yourself stuck, have a look at our [Support](SUPPORT.md) page for resources where you can find help.
 
-## Getting started
+## [Getting started](https://polybar.readthedocs.io/en/latest/getting_started.html)
+
+### Installation
 
 <a href="https://repology.org/metapackage/polybar">
     <img src="https://repology.org/badge/vertical-allrepos/polybar.svg" alt="Packaging status" align="right">
 </a>
 
 Polybar was already packaged for the distros listed below.
-If you can't find your distro here, you will have to [build from source](#building-from-source).
+If you can't find your distro here, you will have to compile polybar yourself.
+See our [Compiling](https://github.com/polybar/polybar/wiki/Compiling) page for
+detailed instructions.
+
+---
 
 If you create a package for any other distribution, please consider contributing the template.
 
@@ -105,57 +110,7 @@ If you are using **FreeBSD**, [polybar](https://svnweb.freebsd.org/ports/head/x1
 
 If you are using **Gentoo**, both release and git-master versions are available in the [main](https://packages.gentoo.org/packages/x11-misc/polybar) repository.
 
-### Dependencies
-
-A compiler with C++14 support ([clang-3.4+](http://llvm.org/releases/download.html), [gcc-5.1+](https://gcc.gnu.org/releases.html)), [cmake 3.1+](https://cmake.org/download/), [git](https://git-scm.com/downloads)
-- `cairo`
-- `libxcb`
-- `python2`
-- `xcb-proto`
-- `xcb-util-image`
-- `xcb-util-wm`
-
-**Optional dependencies:**
-- `xcb-util-cursor` *required for the `cursor-click` and `cursor-scroll` settings*
-- `xcb-util-xrm` *required for accessing X resources with `${xrdb:...}`*
-
-**Optional dependencies for extended module support:**
-- `xcb-xkb` *required by `internal/xkeyboard`*
-- `alsa-lib` *required by `internal/alsa`*
-- `libpulse` *required by `internal/pulseaudio`*
-- `i3-wm` *required by `internal/i3`*
-- `jsoncpp` *required by `internal/i3`*
-- `libmpdclient` *required by `internal/mpd`*
-- `libcurl` *required by `internal/github`*
-- `libnl-genl` or `wireless_tools` *required by `internal/network`*
-
 Find a more complete list on the [dedicated wiki page](https://github.com/polybar/polybar/wiki/Compiling).
-
-
-### Building from source
-
-Please [report any problems](https://github.com/polybar/polybar/issues/new/choose) you run into when building the project.
-
-Download the `polybar-<version>.tar` for the version you want to build from the
-[release page](https://github.com/polybar/polybar/releases), extract it with
-`tar xvf polybar-<version>.tar` and go into the extracted folder. There, run
-the following commands:
-
-```sh
-$ mkdir build
-$ cd build
-$ cmake ..
-$ make -j$(nproc)
-$ sudo make install
-```
-
-There's also a helper script available in the root folder:
-
-  ~~~ sh
-  $ ./build.sh
-  ~~~
-
-For more info, have a look at the [Compiling wiki page](https://github.com/polybar/polybar/wiki/Compiling).
 
 ### Configuration
 
