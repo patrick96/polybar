@@ -524,6 +524,7 @@ void tray_manager::create_window() {
     << cw_params_event_mask(XCB_EVENT_MASK_SUBSTRUCTURE_REDIRECT
                            |XCB_EVENT_MASK_STRUCTURE_NOTIFY
                            |XCB_EVENT_MASK_EXPOSURE)
+    /* << cw_parent(m_opts.sibling) */
     << cw_params_override_redirect(true);
   // clang-format on
 
@@ -611,9 +612,10 @@ void tray_manager::restack_window() {
 
     connection::pack_values(mask, &params, values);
     m_connection.configure_window_checked(m_tray, mask, values);
+    m_connection.flush();
   } catch (const exception& err) {
     auto id = m_connection.id(m_opts.sibling);
-    m_log.trace("tray: Failed to put tray above %s in the stack (%s)", id, err.what());
+    m_log.err("tray: Failed to put tray above %s in the stack (%s)", id, err.what());
   }
 }
 
@@ -624,7 +626,7 @@ void tray_manager::set_wm_hints() {
   const unsigned int visual{m_connection.screen()->root_visual};
   const unsigned int orientation{_NET_SYSTEM_TRAY_ORIENTATION_HORZ};
 
-  m_log.trace("bar: Set window WM_NAME / WM_CLASS");
+  m_log.trace("tray: Set window WM_NAME / WM_CLASS");
   icccm_util::set_wm_name(m_connection, m_tray, TRAY_WM_NAME, 19_z, TRAY_WM_CLASS, 12_z);
 
   m_log.trace("tray: Set window WM_PROTOCOLS");

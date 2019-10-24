@@ -6,6 +6,8 @@
 #include "utils/factory.hpp"
 #include "utils/file.hpp"
 
+#include "i3ipc++/ipc-util.hpp"
+
 #include "modules/meta/base.inl"
 
 POLYBAR_NS
@@ -97,9 +99,17 @@ namespace modules {
     event_module::stop();
   }
 
+  // TODO make it easier for modules to override the module<Impl>::idle function so that
+  // we can idle until event occurs
+  // FIXME fix error when shuting down polybar
+  void i3_module::idle() {
+    /* std::cout << "IDLE" << std::endl; */
+    m_ipc->handle_event();
+  }
+
   bool i3_module::has_event() {
     try {
-      m_ipc->handle_event();
+      /* m_ipc->handle_event(); */
       return true;
     } catch (const exception& err) {
       try {

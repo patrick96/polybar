@@ -48,6 +48,7 @@ namespace modules {
     explicit i3_module(const bar_settings&, string);
 
     void stop();
+    void idle();
     bool has_event();
     bool update();
     bool build(builder* builder, const string& tag) const;
