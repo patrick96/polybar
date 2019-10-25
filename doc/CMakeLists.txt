@@ -3,12 +3,14 @@ cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
 # Only used if documentation is built on its own
 project(polybar-doc NONE)
 
-find_program(SPHINX_EXECUTABLE
-  NAMES sphinx-build
-  DOC "Sphinx Documentation Builder")
-
 if(NOT SPHINX_EXECUTABLE)
-  message_colored(FATAL_ERROR "Failed to locate sphinx-build" 31)
+  find_program(SPHINX_EXECUTABLE
+    NAMES sphinx-build
+    DOC "Sphinx Documentation Builder")
+
+  if(NOT SPHINX_EXECUTABLE)
+    message_colored(FATAL_ERROR "Failed to locate sphinx-build" 31)
+  endif()
 endif()
 
 set(SPHINX_FLAGS "" CACHE STRING "Flags to pass to sphinx-build")

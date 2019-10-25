@@ -66,3 +66,30 @@ Let's break this down:
 
 - ``content = Text`` is a property that is specific to the text module, it
   defines what text the module displays.
+
+A Small Example
+---------------
+
+Alright, now that you know the basics, let's look at a small example that
+actually does something (:download:`Download <_static/getting_started.conf>`):
+
+.. literalinclude:: _static/getting_started.conf
+   :language: dosini
+
+If you put this file into ``~/.config/polybar/config`` and run ``polybar
+mybar``, it should look a little like this:
+
+.. figure:: _static/getting_started_config.png
+   :target: _static/getting_started_config.png
+   :align:   center
+
+Nothing too fancy yet, but don't worry polybar can be customized more than
+enough.
+
+Fonts
+-----
+
+Next Steps
+----------
+
+Link to modules on wiki
