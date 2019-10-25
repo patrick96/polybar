@@ -9,7 +9,7 @@ Polybar Documentation
 Welcome to the official polybar documentation.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: General:
 
    getting_started
