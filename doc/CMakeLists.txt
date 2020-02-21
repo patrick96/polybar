@@ -11,8 +11,21 @@ set(doc_path "${CMAKE_CURRENT_SOURCE_DIR}")
 # Configures conf.py in the current folder and puts it in the build folder
 configure_file(conf.py conf.py @ONLY)
 
-# We want to run `sphinx-build` with the following builders
-set(doc_builders "html" "man")
+# We want to run `sphinx-build` with the builders in doc_builders
+set(doc_builders "")
+
+# We define the options here instead of in 02-opts.cmake to also expose them
+# to doc-only builds
+option(BUILD_DOC_HTML "Build HTML documentation" ON)
+option(BUILD_DOC_MAN "Build manpages" ON)
+
+if(BUILD_DOC_HTML)
+  list(APPEND doc_builders "html")
+endif()
+
+if(BUILD_DOC_MAN)
+  list(APPEND doc_builders "man")
+endif()
 
 # Name of all documentation targets
 set(doc_targets "")

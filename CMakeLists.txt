@@ -52,7 +52,6 @@ include(01-core)
 include(02-opts)
 include(03-libs)
 include(04-targets)
-include(05-summary)
 
 if(BUILD_DOC)
   add_subdirectory(doc)
@@ -70,6 +69,9 @@ if(BUILD_TESTS)
   add_subdirectory(tests)
 endif()
 
+# Print summary at the end so that subdirectories can also set options
+# (required for the doc subdirectory)
+include(05-summary)
 
 #
 # Generate configuration file
