@@ -1,7 +1,7 @@
 #include "settings.hpp"
 
 const char* const APP_NAME{"@PROJECT_NAME@"};
-const char* const APP_VERSION{"@APP_VERSION@"};
+const char* const APP_VERSION{"@PROJECT_VERSION@"};
 
 const int SINK_PRIORITY_BAR{1};
 const int SINK_PRIORITY_SCREEN{2};

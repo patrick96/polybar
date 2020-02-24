@@ -34,7 +34,7 @@ if on_rtd:
   version = os.environ.get('READTHEDOCS_VERSION', None)
 else:
   # The short X.Y version
-  version = '@APP_VERSION@'
+  version = '@PROJECT_VERSION@'
 
 # The full version, including alpha/beta/rc tags
 release = version

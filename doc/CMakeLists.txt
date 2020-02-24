@@ -1,10 +1,8 @@
-cmake_minimum_required(VERSION 3.1.0 FATAL_ERROR)
-
-# Only used if documentation is built on its own
-project(polybar-doc NONE)
-
 set(SPHINX_FLAGS "" CACHE STRING "Flags to pass to sphinx-build")
 separate_arguments(sphinx_flags UNIX_COMMAND "${SPHINX_FLAGS}")
+
+option(BUILD_DOC_HTML "Build HTML documentation" ON)
+option(BUILD_DOC_MAN "Build manpages" ON)
 
 set(doc_path "${CMAKE_CURRENT_SOURCE_DIR}")
 
@@ -13,11 +11,6 @@ configure_file(conf.py conf.py @ONLY)
 
 # We want to run `sphinx-build` with the builders in doc_builders
 set(doc_builders "")
-
-# We define the options here instead of in 02-opts.cmake to also expose them
-# to doc-only builds
-option(BUILD_DOC_HTML "Build HTML documentation" ON)
-option(BUILD_DOC_MAN "Build manpages" ON)
 
 if(BUILD_DOC_HTML)
   list(APPEND doc_builders "html")
@@ -51,19 +44,6 @@ endforeach()
 
 # Dummy target that depends on all documentation targets
 add_custom_target(doc ALL DEPENDS ${doc_targets})
-
-# This is needed for the case where only the doc target is built
-# CMAKE_INSTALL_DOCDIR uses PROJECT_NAME which is now polybar-doc, to be
-# consistent with a regular install we temporarily override it with "polybar"
-# before including GNUInstallDirs
-# Also since no language is set and GNUInstallDirs cannot set
-# CMAKE_INSTALL_LIBDIR, so we set it to a dummy value to suppress a warning
-if(${CMAKE_PROJECT_NAME} STREQUAL "polybar-doc")
-  set(PROJECT_NAME "polybar")
-  set(CMAKE_INSTALL_LIBDIR "")
-  include(GNUInstallDirs)
-  set(PROJECT_NAME "polybar-doc")
-endif()
 
 install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/html/
   DESTINATION ${CMAKE_INSTALL_DOCDIR}

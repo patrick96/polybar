@@ -1,9 +1,6 @@
 #
 # Build options
 #
-set(SPHINX_BUILD "sphinx-build" CACHE STRING "Name/Path of the sphinx-build executable to use.")
-checklib(BUILD_DOC "binary" "${SPHINX_BUILD}")
-
 checklib(ENABLE_ALSA "pkg-config" alsa)
 checklib(ENABLE_CURL "pkg-config" libcurl)
 checklib(ENABLE_I3 "binary" i3)
@@ -28,10 +25,6 @@ endif()
 
 option(CXXLIB_CLANG "Link against libc++" OFF)
 option(CXXLIB_GCC "Link against stdlibc++" OFF)
-
-option(BUILD_IPC_MSG "Build ipc messager" ON)
-option(BUILD_TESTS "Build testsuite" OFF)
-option(BUILD_DOC "Build documentation" ON)
 
 option(ENABLE_ALSA "Enable alsa support" ON)
 option(ENABLE_CURL "Enable curl support" ON)
