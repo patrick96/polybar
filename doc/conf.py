@@ -62,7 +62,7 @@ extensions = [
 
 
 if on_rtd:
-  extensions.insert(1, "readthedocs_ext.external_version_warning")
+  extensions.append('versionwarning.extension')
 
 
 # Add any paths that contain templates here, relative to this directory.
