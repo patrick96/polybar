@@ -62,6 +62,9 @@ extensions = [
 
 
 if on_rtd:
+  versionwarning_messages = {
+      'latest': 'You are reading the documentation for the latest development version of polybar. The content may not reflect the state of the newest stable release. {newest} is the newest stable release.'
+  }
   extensions.append('versionwarning.extension')
 
 
