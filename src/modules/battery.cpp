@@ -261,7 +261,7 @@ namespace modules {
       case battery_module::state::LOW:
         if (m_formatter->has_format(FORMAT_LOW)) {
           return FORMAT_LOW;
-        }  
+        }
         return FORMAT_DISCHARGING;
       case battery_module::state::DISCHARGING: return FORMAT_DISCHARGING;
       default: return FORMAT_CHARGING;

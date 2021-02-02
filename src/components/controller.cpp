@@ -167,14 +167,8 @@ bool controller::run(bool writeback, string snapshot_dst) {
   }
 
   m_connection.flush();
-  m_event_thread = thread(&controller::process_eventqueue, this);
 
   read_events();
-
-  if (m_event_thread.joinable()) {
-    enqueue(make_quit_evt(static_cast<bool>(g_reload)));
-    m_event_thread.join();
-  }
 
   m_log.notice("Termination signal received, shutting down...");
 
@@ -188,13 +182,16 @@ bool controller::enqueue(event&& evt) {
   if (!m_process_events && evt.type != event_type::QUIT) {
     return false;
   }
+
+  m_log.notice("evt: %d", evt.type);
+
   if (!m_queue.enqueue(forward<decltype(evt)>(evt))) {
     m_log.warn("Failed to enqueue event");
     return false;
   }
-  // if (write(g_eventpipe[PIPE_WRITE], " ", 1) == -1) {
-  //   m_log.err("Failed to write to eventpipe (reason: %s)", strerror(errno));
-  // }
+  if (write(g_eventpipe[PIPE_WRITE], " ", 1) == -1) {
+    m_log.err("Failed to write to eventpipe (reason: %s)", strerror(errno));
+  }
   return true;
 }
 
@@ -216,6 +213,13 @@ bool controller::enqueue(string&& input_data) {
  */
 void controller::read_events() {
   m_log.info("Entering event loop (thread-id=%lu)", this_thread::get_id());
+
+  if (!m_writeback) {
+    m_sig.emit(signals::eventqueue::start{});
+  } else {
+    // bypass the start eventqueue signal
+    m_sig.emit(signals::ui::ready{});
+  }
 
   int fd_connection{-1};
   int fd_confwatch{-1};
@@ -267,10 +271,13 @@ void controller::read_events() {
 
     // Process event on the internal fd
     if (m_queuefd[PIPE_READ] && FD_ISSET(static_cast<int>(*m_queuefd[PIPE_READ]), &readfds)) {
+      m_log.notice("eventqueue wakeup");
       char buffer[BUFSIZ];
       if (read(static_cast<int>(*m_queuefd[PIPE_READ]), &buffer, BUFSIZ) == -1) {
         m_log.err("Failed to read from eventpipe (err: %s)", strerror(errno));
       }
+
+      while (process_eventqueue());
     }
 
     // Process event on the config inotify watch fd
@@ -322,67 +329,33 @@ void controller::read_events() {
 /**
  * Eventqueue worker loop
  */
-void controller::process_eventqueue() {
+bool controller::process_eventqueue() {
   m_log.info("Eventqueue worker (thread-id=%lu)", this_thread::get_id());
-  if (!m_writeback) {
-    m_sig.emit(signals::eventqueue::start{});
-  } else {
-    // bypass the start eventqueue signal
-    m_sig.emit(signals::ui::ready{});
+
+  event evt{};
+  if (!m_queue.try_dequeue(evt)) {
+    return false;
   }
 
-  while (!g_terminate) {
-    event evt{};
-    m_queue.wait_dequeue(evt);
+  m_log.notice("dequeue: %d", evt.type);
 
-    if (g_terminate) {
-      break;
-    } else if (evt.type == event_type::QUIT) {
-      if (evt.flag) {
-        on(signals::eventqueue::exit_reload{});
-      } else {
-        on(signals::eventqueue::exit_terminate{});
-      }
-    } else if (evt.type == event_type::INPUT) {
-      process_inputdata();
-    } else if (evt.type == event_type::UPDATE && evt.flag) {
-      process_update(true);
+  if (evt.type == event_type::QUIT) {
+    if (evt.flag) {
+      on(signals::eventqueue::exit_reload{});
     } else {
-      event next{};
-      size_t swallowed{0};
-      while (swallowed++ < m_swallow_limit && m_queue.wait_dequeue_timed(next, m_swallow_update)) {
-        if (next.type == event_type::QUIT) {
-          evt = next;
-          break;
-        } else if (next.type == event_type::INPUT) {
-          evt = next;
-          break;
-        } else if (evt.type != next.type) {
-          enqueue(move(next));
-          break;
-        } else {
-          m_log.trace_x("controller: Swallowing event within timeframe");
-          evt = next;
-        }
-      }
-
-      if (evt.type == event_type::UPDATE) {
-        process_update(evt.flag);
-      } else if (evt.type == event_type::INPUT) {
-        process_inputdata();
-      } else if (evt.type == event_type::QUIT) {
-        if (evt.flag) {
-          on(signals::eventqueue::exit_reload{});
-        } else {
-          on(signals::eventqueue::exit_terminate{});
-        }
-      } else if (evt.type == event_type::CHECK) {
-        on(signals::eventqueue::check_state{});
-      } else {
-        m_log.warn("Unknown event type for enqueued event (%d)", evt.type);
-      }
+      on(signals::eventqueue::exit_terminate{});
     }
+  } else if (evt.type == event_type::INPUT) {
+    process_inputdata();
+  } else if (evt.type == event_type::UPDATE) {
+    process_update(evt.flag);
+  } else if (evt.type == event_type::CHECK) {
+    on(signals::eventqueue::check_state{});
+  } else {
+    m_log.warn("Unknown event type for enqueued event (%d)", evt.type);
   }
+
+  return true;
 }
 
 /**

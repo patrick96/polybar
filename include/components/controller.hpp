@@ -54,7 +54,7 @@ class controller
 
  protected:
   void read_events();
-  void process_eventqueue();
+  bool process_eventqueue();
   void process_inputdata();
   bool process_update(bool force);
 
@@ -132,11 +132,6 @@ class controller
    * \brief Input data
    */
   string m_inputdata;
-
-  /**
-   * \brief Thread for the eventqueue loop
-   */
-  std::thread m_event_thread;
 
   /**
    * \brief Misc threads
