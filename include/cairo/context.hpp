@@ -3,6 +3,7 @@
 #include <cairo/cairo-xcb.h>
 
 #include <algorithm>
+#include <dbg.h>
 #include <cmath>
 #include <deque>
 #include <iterator>
@@ -209,7 +210,13 @@ namespace cairo {
 
           // Render subset
           auto fontextents = f->extents();
-          f->render(subset, x, y - (fontextents.descent / 2 - fontextents.height / 4) + f->offset());
+          int h = 2 * y;
+          dbg(fontextents.descent);
+          dbg(fontextents.ascent);
+          dbg(fontextents.height);
+          dbg(y);
+          dbg(h);
+          f->render(subset, x, dbg(h - (h - (fontextents.ascent + fontextents.descent)) / 2 - fontextents.descent) + f->offset());
 
           // Get updated position
           position(&x, nullptr);

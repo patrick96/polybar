@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cairo/cairo-ft.h>
+#include <dbg.h>
 
 #include "cairo/types.hpp"
 #include "cairo/utils.hpp"
@@ -255,6 +256,10 @@ namespace cairo {
         cairo_show_text_glyphs(m_cairo, utf8.c_str(), utf8.size(), glyphs, nglyphs, clusters, nclusters, cf);
         cairo_fill(m_cairo);
         cairo_move_to(m_cairo, x + extents.x_advance, 0.0);
+        dbg(text);
+        dbg(extents.height);
+        dbg(extents.y_bearing);
+        dbg(extents.y_advance);
       }
 
       cairo_glyph_free(glyphs);
