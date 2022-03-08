@@ -40,10 +40,8 @@ void inotify_watch::attach(int mask) {
 /**
  * Remove inotify watch
  */
-void inotify_watch::remove(bool force) {
-  if (inotify_rm_watch(m_fd, m_wd) == -1 && !force) {
-    throw system_error("Failed to remove inotify watch");
-  }
+void inotify_watch::remove() {
+  inotify_rm_watch(m_fd, m_wd);
   m_wd = -1;
   m_mask = 0;
 }
@@ -71,7 +69,7 @@ bool inotify_watch::poll(int wait_ms) const {
  * Get the latest inotify event
  */
 inotify_event inotify_watch::get_event() const {
-  inotify_event event;
+  inotify_event event{};
 
   if (m_fd == -1 || m_wd == -1) {
     return event;

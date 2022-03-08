@@ -73,7 +73,12 @@ namespace modules {
 
   bool backlight_module::on_event(const inotify_event& event) {
     if (event.is_valid) {
+      // TODO remove
+      m_log.notice("%s: Got valid inotify event: %s", name(), event.filename);
       m_log.trace("%s: %s", name(), event.filename);
+    } else {
+      // TODO remove
+      m_log.notice("%s: on_event (invalid)", name());
     }
 
     m_max_brightness = m_max.read();

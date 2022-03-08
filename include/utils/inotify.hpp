@@ -24,7 +24,7 @@ class inotify_watch {
   ~inotify_watch();
 
   void attach(int mask = IN_MODIFY);
-  void remove(bool force = false);
+  void remove();
   bool poll(int wait_ms = 1000) const;
   inotify_event get_event() const;
   const string path() const;

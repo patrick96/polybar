@@ -199,6 +199,7 @@ namespace modules {
       if (chrono::duration_cast<decltype(m_interval)>(now - m_lastpoll) > m_interval) {
         m_lastpoll = now;
         m_log.info("%s: Polling values (inotify fallback)", name());
+        // TODO try without forcing a read
         read(*m_capacity_reader);
       }
     }
@@ -217,6 +218,8 @@ namespace modules {
     m_lastpoll = chrono::steady_clock::now();
 
     if (event.is_valid) {
+      // TODO remove
+      m_log.notice("%s: Got valid inotify event: %s", name(), event.filename);
       m_log.trace("%s: Inotify event reported for %s", name(), event.filename);
 
       if (state == m_state && percentage == m_percentage && m_unchanged--) {
@@ -224,6 +227,8 @@ namespace modules {
       }
 
       m_unchanged = SKIP_N_UNCHANGED;
+    } else {
+      m_log.notice("%s: on_event (invalid)", name());
     }
 
     m_state = state;

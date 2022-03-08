@@ -68,9 +68,7 @@ namespace modules {
           if (w.poll(1000 / watches.size())) {
             auto event = w.get_event();
 
-            for (auto&& w : watches) {
-              w.remove(true);
-            }
+            std::for_each(watches.begin(), watches.end(), [](auto& w) { w.remove(); });
 
             if (CAST_MOD(Impl)->on_event(event)) {
               CAST_MOD(Impl)->broadcast();
@@ -79,8 +77,9 @@ namespace modules {
             return;
           }
 
-          if (!this->running())
+          if (!this->running()) {
             break;
+          }
         }
         CAST_MOD(Impl)->idle();
       }
